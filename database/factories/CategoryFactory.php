@@ -16,7 +16,7 @@ class CategoryFactory extends Factory
      */
     public function definition()
     {
-        $word = $this->faker->word;
+        $word = fake()->unique()->word();
         return [
             'name' => ucwords($word),
             'slug' => strtolower($word)
