@@ -15,8 +15,19 @@
             </a>
         </div>
 
-        <div class="mt-8 md:mt-0">
-            <a href="/" class="text-xs font-bold uppercase">Home Page</a>
+        <div class="mt-8 md:mt-0 flex items-center gap-5">
+            @auth
+                <span class="text-xs font-bold uppercase">Welcome Back, {{ auth()->user()->name }}!</span>
+
+                <form method="POST" action="/logout">
+                    @csrf
+
+                    <button type="submit">Log Out</button>
+                </form>
+            @else
+                <a href="/register" class="text-xs font-bold uppercase">Register</a>
+                <a href="/login" class="text-xs font-bold uppercase">Log In</a>
+            @endauth
 
             <a href="#" class="bg-blue-500 ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-5">
                 Subscribe for Updates
@@ -54,4 +65,18 @@
         </div>
     </footer>
 </section>
+
+@if(session()->has('success'))
+    <div x-data="{show: true}"
+         x-init="setTimeout(() => show = false, 3000)"
+         x-show="show"
+         x-transition:leave="transition-opacity ease-linear duration-500"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed bottom-3 right-3 bg-blue-500 py-2 px-4 text-white font-semibold rounded-xl"
+    >
+        <p >{{ session()->get('success') }}</p>
+    </div>
+@endif
+
 </body>
