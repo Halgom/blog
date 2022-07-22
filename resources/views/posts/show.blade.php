@@ -14,8 +14,12 @@
                     <div class="flex items-center lg:justify-center text-sm mt-4">
                         <img src="/images/lary-avatar.svg" alt="Lary avatar">
                         <div class="ml-3 text-left">
-                            <a href="/?author={{ $post->author->username }}"></a><h5
-                                class="font-bold">{{ $post->author->name }}</h5>
+                            @if($post->author)
+                                <a href="/?author={{ $post->author->username }}"><h5
+                                        class="font-bold">{{ $post->author->name }}</h5></a>
+                            @else
+                                <p class="font-bold">Unknown</p>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -50,6 +54,55 @@
                         {!! $post->body !!}
                     </div>
                 </div>
+                <section class="col-start-5 col-span-8 mt-10 space-y-6">
+
+                    @auth
+                        <x-panel>
+                            <form method="POST" action="/posts/{{ $post->slug }}/comments">
+                                @csrf
+
+                                <header class="flex items-center">
+                                    <img src="https://i.pravatar.cc/40?u={{ auth()->id() }}" alt="Your profile picture"
+                                         height="40" width="40" class="rounded-full">
+                                    <h2 class="ml-6">Want to participate?</h2>
+                                </header>
+
+                                <div class="mt-6">
+                                    <textarea name="body"
+                                              class="w-full text-sm border border-gray-200 rounded-xl p-1 resize-none focus:outline-none focus:ring"
+                                              rows="5"
+                                              placeholder="Quick, think of something to say!"
+                                              required
+                                    ></textarea>
+                                    @error('body')
+                                    <span class="text-xs text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="flex justify-end mt-4 pt-4 border-t border-gray-200">
+                                    <button type="submit"
+                                            class="bg-blue-500 text-white uppercase font-semibold text-xs py-2 px-10 rounded-2xl hover:bg-blue-600">
+                                        Post
+                                    </button>
+                                </div>
+                            </form>
+                        </x-panel>
+                    @else
+                        <x-panel class="text-center">
+                            <div class="flex justify-center w-full mt-2 mb-4">
+                                <p><a href="/login" class="bg-blue-500 text-white px-6 py-2 hover:bg-blue-600">Log
+                                        In</a> or <a href="/register"
+                                                     class="bg-blue-500 text-white px-6 py-2 hover:bg-blue-600">Register</a>
+                                </p>
+                            </div>
+                            <p>to leave a comment.</p>
+                        </x-panel>
+                    @endauth
+
+                    @foreach($post->comments as $comment)
+                        <x-post-comment :comment="$comment"/>
+                    @endforeach
+                </section>
             </article>
         </main>
     </section>

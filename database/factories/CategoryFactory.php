@@ -16,10 +16,9 @@ class CategoryFactory extends Factory
      */
     public function definition()
     {
-        $word = fake()->unique()->word();
         return [
-            'name' => ucwords($word),
-            'slug' => strtolower($word)
+            'name' => ucwords(fake()->unique()->word()),
+            'slug' => strtolower(fake()->unique()->word())
         ];
     }
 }
